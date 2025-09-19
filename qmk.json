@@ -1,4 +1,10 @@
 {
     "userspace_version": "1.0",
-    "build_targets": []
+    "build_targets": [
+        [
+            "lily58",
+            "vial",
+            "CONVERT_TO=helios"
+        ]
+    ]
 }
