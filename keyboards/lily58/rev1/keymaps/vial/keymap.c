@@ -16,6 +16,7 @@
 
 #include QMK_KEYBOARD_H
 #include <stdio.h>
+#include "os_detection.h"
 
 enum layer_number {
   _QWERTY = 0,
@@ -118,7 +119,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
                              _______, _______, _______, _______, _______,  _______, _______, _______
   ),
-/* MO(4) 
+/* MO(4)
  * ,-----------------------------------------.                    ,-----------------------------------------.
  * |      |      |      |      |      |      |                    |      |      |      |      |      |      |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
@@ -139,7 +140,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
                              _______, _______, _______, _______, _______,  _______, _______, _______
   ),
-/* MO(5) 
+/* MO(5)
  * ,-----------------------------------------.                    ,-----------------------------------------.
  * |      |      |      |      |      |      |                    |      |      |      |      |      |      |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
@@ -176,7 +177,7 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
 // }
 
 static void render_logo(void) {
-	
+
     static const char PROGMEM logo[] = {
         0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8A, 0x8B, 0x8C, 0x8D, 0x8E, 0x8F, 0x90, 0x91, 0x92, 0x93, 0x94,
         0xA0, 0xA1, 0xA2, 0xA3, 0xA4, 0xA5, 0xA6, 0xA7, 0xA8, 0xA9, 0xAA, 0xAB, 0xAC, 0xAD, 0xAE, 0xAF, 0xB0, 0xB1, 0xB2, 0xB3, 0xB4,
@@ -271,3 +272,18 @@ bool oled_task_user(void) {
 
 #endif // OLED_ENABLE
 
+bool process_detected_host_os_kb(os_variant_t detected_os) {
+    switch (detected_os) {
+        case OS_MACOS:
+            keymap_config.swap_lctl_lgui = true;
+            keymap_config.swap_rctl_rgui = true;
+            break;
+        case OS_WINDOWS:
+        case OS_LINUX:
+        default:
+            keymap_config.swap_lctl_lgui = false;
+            keymap_config.swap_rctl_rgui = false;
+            break;
+    }
+    return true;
+}
