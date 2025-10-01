@@ -17,3 +17,10 @@ QMK_SETTINGS = yes
 LTO_ENABLE = yes
 
 KEY_OVERRIDE_ENABLE = yes
+OS_DETECTION_ENABLE = yes
+
+# Suppress warning about unknown pragmas (e.g., #pragma region/endregion) being
+# treated as errors by toolchains that enable -Werror. This keeps IDE folding
+# markers harmless without changing source files.
+CFLAGS += -Wno-unknown-pragmas
+CCFLAGS += -Wno-unknown-pragmas

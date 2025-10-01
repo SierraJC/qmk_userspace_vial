@@ -33,7 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define VIAL_TAP_DANCE_ENTRIES 4
 #undef LOCKING_SUPPORT_ENABLE
 #undef LOCKING_RESYNC_ENABLE
-#define NO_ACTION_ONESHOT
+// #define NO_ACTION_ONESHOT
 
 /* Select hand configuration */
 
@@ -52,5 +52,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Override OLED font with our custom one.
 #if defined(OLED_FONT_H)
 #    undef OLED_FONT_H
-#    define OLED_FONT_H "keymaps/vial/glcdfont.c"
+#    define OLED_FONT_H "keyboards/lily58/rev1/keymaps/vial/glcdfont.c"
 #endif
