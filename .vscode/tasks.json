@@ -1,0 +1,148 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "QMK: Build All Userspace Targets",
+            "type": "shell",
+            "command": "qmk",
+            "args": [
+                "userspace-compile"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": [],
+            "detail": "Compile all configured keyboards/keymaps in qmk.json"
+        },
+        {
+            "label": "QMK: Build Lily58 Vial",
+            "type": "shell",
+            "command": "qmk",
+            "args": [
+                "compile",
+                "-kb",
+                "lily58",
+                "-km",
+                "vial",
+                "-e",
+                "CONVERT_TO=helios"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": [],
+            "detail": "Compile the Lily58 keyboard with Vial keymap"
+        },
+        {
+            "label": "QMK: Clean Build",
+            "type": "shell",
+            "command": "qmk",
+            "args": [
+                "clean"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "detail": "Clean QMK build artifacts"
+        },
+        {
+            "label": "QMK: Flash Firmware",
+            "type": "shell",
+            "command": "qmk",
+            "args": [
+                "flash",
+                "-kb",
+                "lily58",
+                "-km",
+                "vial",
+                "-e",
+                "CONVERT_TO=helios"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": [],
+            "detail": "Compile and flash the Lily58 keyboard with Vial keymap"
+        },
+        {
+            "label": "QMK: Doctor (Environment Check)",
+            "type": "shell",
+            "command": "qmk",
+            "args": [
+                "doctor"
+            ],
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": [],
+            "detail": "Check QMK environment setup and dependencies"
+        },
+        {
+            "label": "QMK: Userspace Doctor",
+            "type": "shell",
+            "command": "qmk",
+            "args": [
+                "userspace-doctor"
+            ],
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": [],
+            "detail": "Check userspace configuration and setup"
+        },
+        {
+            "label": "QMK: Syntax Check (Compile Only)",
+            "type": "shell",
+            "command": "qmk",
+            "args": [
+                "compile",
+                "-kb",
+                "lily58",
+                "-km",
+                "vial",
+                "-e",
+                "CONVERT_TO=helios",
+                // "--clean"
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": [],
+            "detail": "Compile code to check for syntax errors and warnings"
+        }
+    ]
+}

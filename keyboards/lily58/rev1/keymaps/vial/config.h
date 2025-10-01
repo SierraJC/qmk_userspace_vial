@@ -49,4 +49,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #undef FLOW_TAP_TERM
 #define FLOW_TAP_TERM 100
 
-
+// Override OLED font with our custom one.
+#if defined(OLED_FONT_H)
+#    undef OLED_FONT_H
+#    define OLED_FONT_H "keymaps/vial/glcdfont.c"
+#endif
