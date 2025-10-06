@@ -31,16 +31,12 @@ enum layer_number {
 #define RAISE MO(_NAV)
 #define LOWER MO(_SYMBOLS)
 
-#define C_S(kc) LCTL(LSFT(kc))
-
-// Custom chat mode keycode: press to switch into QWERTY so you can type chat,
-// press Escape to return to the previous layer (e.g. GAMING).
 enum custom_keycodes {
+	/* Toggles qwerty layer until ESC or ENTER are pressed - Used for in-game chat */
 	CHAT_MODE = QK_KB_0,
 };
 
-static uint8_t prev_layer  = _QWERTY;
-static bool    chat_active = false;
+static bool chat_active = false;
 
 /*
  * ,-----------------------------------------.                    ,-----------------------------------------.
@@ -56,14 +52,16 @@ static bool    chat_active = false;
  *                   |      |      |      |/       /         \      \ |      |      |      |
  *                   `----------------------------'           '------''--------------------'
  */
+// ? Keymap is not yet baked into firmware. I'm using Vial GUI to live edit keymap while I find what works for me. Ref: `layout.vil`.
+// TODO: Bake keymap into firmware once changes settle.
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // clang-format off
 		[_QWERTY] = LAYOUT(
-			KC_ESC,   KC_1,   KC_2,    KC_3,    KC_4,    KC_5,                     KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_GRV,
-			LT(1,KC_TAB), KC_Q, KC_W,  KC_E,    KC_R,    KC_T,                     KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_MINS,
-			KC_LCTL, LGUI_T(KC_A), LALT_T(KC_S), LSFT_T(KC_D), LCTL_T(KC_F), KC_G, KC_H, RCTL_T(KC_J), RSFT_T(KC_K), RALT_T(KC_L), RGUI_T(KC_SCLN), KC_QUOT,
-			KC_LSFT,  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B, KC_LBRC,  KC_RBRC,  KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,  KC_RSFT,
-													KC_LALT, KC_NO,   MO(1),   KC_SPC, LT(3,KC_ENT), KC_BSPC, KC_BSPC, MO(2)
+			KC_ESC,   KC_1,   KC_2,    KC_3,    KC_4,    KC_5,                         KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_GRV,
+			LT(_SYMBOLS,KC_TAB), KC_Q, KC_W,  KC_E,    KC_R,    KC_T,                  KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_MINS,
+			KC_LCTL, LGUI_T(KC_A), LALT_T(KC_S), LSFT_T(KC_D), LCTL_T(KC_F), KC_G,     KC_H, RCTL_T(KC_J), RSFT_T(KC_K), RALT_T(KC_L), RGUI_T(KC_SCLN), KC_QUOT,
+			KC_LSFT,  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B, KC_LBRC,  KC_RBRC,      KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,  KC_RSFT,
+											        		KC_LALT, KC_NO,   MO(_SYMBOLS),   KC_SPC,      LT(_MOUSE,KC_ENT), MO(_NAV), KC_BSPC, KC_BSPC
 		),
 		[_SYMBOLS] = LAYOUT(
 			_______, _______, _______, _______, _______, _______,                   _______, _______, _______,_______, _______, _______,
@@ -104,24 +102,32 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-	if (keycode == CHAT_MODE) {
-		if (record->event.pressed) {
-			prev_layer = get_highest_layer(layer_state | default_layer_state);
-			layer_move(_QWERTY);
-			chat_active = true;
+	if (chat_active && record->event.pressed) {
+		if (
+		    // Regular key presses
+		    (keycode == KC_ESC || keycode == KC_ENT)) {
+			chat_active = false;
+			layer_clear();
+			layer_on(_GAMING);
+			return true;
+		} else if (keycode == LT(_MOUSE, KC_ENT) && record->tap.count > 0) {
+			// Layer toggle key presses
+			chat_active = false;
+			layer_clear();
+			layer_on(_GAMING);
+			tap_code(KC_ENT); // Send Enter keycode, else it will send gaming layer key (probably space)
+			return false;
 		}
-		return false; // don't send any keypress for CHAT_MODE itself
 	}
 
-	// If ESC or Enter is pressed/released while in chat mode, return to previous layer
-	if (keycode == KC_ESC) {
-		if (record->event.pressed) {
-			if (chat_active) {
-				layer_move(prev_layer);
-				chat_active = false;
+	switch (keycode) {
+		case CHAT_MODE:
+			if (record->event.pressed) {
+				chat_active = true;
+				layer_off(_GAMING);
+				layer_on(_QWERTY);
 			}
-		}
-		return true;
+			return false;
 	}
 
 	return true;
@@ -299,16 +305,10 @@ void render_paw(void) {
 }
 
 void render_qr(void) {
-	// clang-format off
-static const char PROGMEM qr[] = {
-0x93, 0x94, 0x95, 0x96, 0x97,
-0xb3, 0xb4, 0xb5, 0xb6, 0xb7,
-0xd3, 0xd4, 0xd5, 0xd6, 0xd7,
-0x98, 0x99, 0x9a, 0x9b, 0x9c, 0,
-};
-	// clang-format on
+	static const char PROGMEM qr[] = {
+	    0x93, 0x94, 0x95, 0x96, 0x97, 0xb3, 0xb4, 0xb5, 0xb6, 0xb7, 0xd3, 0xd4, 0xd5, 0xd6, 0xd7, 0x98, 0x99, 0x9a, 0x9b, 0x9c, 0,
+	};
 	oled_write_P(qr, false);
-	// oled_write_P(PSTR("don't"), false);
 }
 
 void render_layer_state(void) {
