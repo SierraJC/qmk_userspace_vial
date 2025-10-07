@@ -52,5 +52,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Override OLED font with our custom one.
 #if defined(OLED_FONT_H)
     #undef OLED_FONT_H
-    #define OLED_FONT_H "keyboards/lily58/keymaps/vial/glcdfont.c"
+    #define OLED_FONT_H "keyboards/lily58/keymaps/sierrajc/glcdfont.c"
 #endif

@@ -15,7 +15,6 @@
  */
 
 #include QMK_KEYBOARD_H
-#include <stdio.h>
 #include "os_detection.h"
 
 #pragma region Layers
