@@ -9,7 +9,7 @@ The documentation for qmk can be found at https://docs.qmk.fm/.
 ### Userspace Structure
 - **`qmk.json`**: Defines build targets
 - **`keyboards/lily58/`**: Keyboard-specific overrides and keymaps
-- **`keyboards/lily58/rev1/keymaps/vial/`**: Primary keymap directory containing:
+- **`keyboards/lily58/keymaps/sierrajc/`**: Primary keymap directory containing:
   - `keymap.c`: Layer definitions, OLED functions, OS detection
   - `config.h`: Vial settings, timing configurations, feature flags
   - `rules.mk`: Build feature enables/disables
